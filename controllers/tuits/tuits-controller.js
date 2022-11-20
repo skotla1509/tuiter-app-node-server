@@ -22,7 +22,7 @@ const createTuit = (req, res) => {
     };
     newTuit.title = newTuit.tuit;
     newTuit._id = (new Date()).getTime() + '';
-    tuits.splice(0, 0, newTuit);
+    tuits.unshift(newTuit);
     res.json(newTuit);
 }
 
