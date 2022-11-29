@@ -5,11 +5,9 @@ const createTuit = async (req, res) => {
     newTuit.title = newTuit.tuit;
     tuitsDao.createTuit(newTuit)
         .then((result) => {
-            console.log("RESULT: " + JSON.stringify(result));
             res.json(result);
         })
         .catch((error) => {
-            console.log("ERROR " + error);
             res.sendStatus(400);
         });
 }
@@ -24,11 +22,9 @@ const updateTuit = async (req, res) => {
     const updates = req.body;
     tuitsDao.updateTuit(tuitdIdToUpdate, updates)
         .then((result) => {
-            console.log("RESULT: " + JSON.stringify(result));
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log("ERROR " + error);
             res.sendStatus(400);
         });
 }
@@ -37,11 +33,9 @@ const deleteTuit = async (req, res) => {
     const tuitdIdToDelete = req.params.tid;
     tuitsDao.deleteTuit(tuitdIdToDelete)
         .then((result) => {
-            console.log("RESULT: " + JSON.stringify(result));
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log("ERROR: " + error);
             res.sendStatus(400);
         });
 }
