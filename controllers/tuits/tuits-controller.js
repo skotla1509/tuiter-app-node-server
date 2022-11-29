@@ -1,48 +1,49 @@
-import posts from "./tuits.js";
-let tuits = posts;
+import * as tuitsDao from './tuits-dao.js';
 
-const newTuitTemplate = {
-    likes: 0,
-    liked: false,
-    dislikes: 0,
-    replies: 0,
-    retuits: 0,
-    time: 'just now',
-    image: 'nasa_logo.jpg',
-    username: 'NASA',
-    handle: '@nasa',
-    topic: 'Space',
-    isVerified: false
-}
-
-const createTuit = (req, res) => {
-    const newTuit = {
-        ...req.body,
-        ...newTuitTemplate
-    };
+const createTuit = async (req, res) => {
+    const newTuit = req.body;
     newTuit.title = newTuit.tuit;
-    newTuit._id = (new Date()).getTime() + '';
-    tuits.unshift(newTuit);
-    res.json(newTuit);
+    tuitsDao.createTuit(newTuit)
+        .then((result) => {
+            console.log("RESULT: " + JSON.stringify(result));
+            res.json(result);
+        })
+        .catch((error) => {
+            console.log("ERROR " + error);
+            res.sendStatus(400);
+        });
 }
 
-const findTuits  = (req, res) => {
+const findTuits  = async (req, res) => {
+    const tuits = await tuitsDao.findTuits();
     res.json(tuits);
 };
 
-const updateTuit = (req, res) => {
+const updateTuit = async (req, res) => {
     const tuitdIdToUpdate = req.params.tid;
     const updates = req.body;
-    const tuitIndex = tuits.findIndex((t) => t._id === tuitdIdToUpdate);
-    tuits[tuitIndex] = {...tuits[tuitIndex], ...updates};
-    res.sendStatus(200);
+    tuitsDao.updateTuit(tuitdIdToUpdate, updates)
+        .then((result) => {
+            console.log("RESULT: " + JSON.stringify(result));
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log("ERROR " + error);
+            res.sendStatus(400);
+        });
 }
 
-
-const deleteTuit = (req, res) => {
+const deleteTuit = async (req, res) => {
     const tuitdIdToDelete = req.params.tid;
-    tuits = tuits.filter((t) => t._id !== tuitdIdToDelete);
-    res.sendStatus(200);
+    tuitsDao.deleteTuit(tuitdIdToDelete)
+        .then((result) => {
+            console.log("RESULT: " + JSON.stringify(result));
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log("ERROR: " + error);
+            res.sendStatus(400);
+        });
 }
 
 export default (app) => {
